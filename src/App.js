@@ -1,24 +1,32 @@
+// 各マスの正方形を生成するコンポーネントを定義
+function Square() {
+  return <button className="square">1</button>;
+}
+
 // 外部から参照できるメイン関数"Square"を定義
 // "Square"ではなくなったので"Board"に変更
 export default function Board() {
   return (
     // JSXを返すので空の親要素<></>を設定
     <>
-      {/* 3×3の格子とナンバリング */}
+      {/* 3行描写 */}
       <div className="board-row">
-        <button className="square">1</button>
-        <button className="square">2</button>
-        <button className="square">3</button>
+        {/* Squareコンポーネントを3マス分呼び出す */}
+        <Square />
+        <Square />
+        <Square />
       </div>
       <div className="board-row">
-        <button className="square">4</button>
-        <button className="square">5</button>
-        <button className="square">6</button>
+        {/* Squareコンポーネントを3マス分呼び出す */}
+        <Square />
+        <Square />
+        <Square />
       </div>
       <div className="board-row">
-        <button className="square">7</button>
-        <button className="square">8</button>
-        <button className="square">9</button>
+        {/* Squareコンポーネントを3マス分呼び出す */}
+        <Square />
+        <Square />
+        <Square />
       </div>
     </>
   );
