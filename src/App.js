@@ -42,9 +42,18 @@ export default function Board() {
   // 配列内の全てをnullで初期設定
   const [squares, setSquares] = useState(Array(9).fill(null));
 
-  // Squareに引き渡す関数handleClick()を定義
+  // Squareに引き渡す、マスをクリックした時の動作関数handleClick()を定義
   // 引数のマス目iの中身=nextSquaresのi番目要素をXとして定義
   function handleClick(i) {
+
+    // クリックしたマスが空欄か選択済みか判定
+    // 選択済みなら処理終了
+    if (squares[i]) {
+      return;
+    }
+
+    // クリックマスか空欄の場合以下続行
+
     // 定数nextSquares に配列squaresをコピー
     const nextSquares = squares.slice();
 
