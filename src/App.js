@@ -35,6 +35,9 @@ function Square( {value, onSquareClick } ) {
 // "Square"ではなくなったので"Board"に変更
 export default function Board() {
 
+  // 手番プレイヤーの判定
+  const [xIsNext, setXIsNext] = useState(true);
+
   // 変数squaresを定義
   // 配列内の全てをnullで初期設定
   const [squares, setSquares] = useState(Array(9).fill(null));
@@ -46,10 +49,21 @@ export default function Board() {
     const nextSquares = squares.slice();
 
     // 配列nextSquaresの最初の要素を"0"に設定
-    nextSquares[i] = "X";
-
+    // nextSquares[i] = "X";
+    
+    // 手版に応じて○×を指定
+    if (xIsNext) {
+      nextSquares[i] = "×";
+    } else {
+      nextSquares[i] = "○";
+    }
+      
     // 定数squaresの中身をnextSquaresに更新
     setSquares(nextSquares);
+
+    // 手番交代
+    setXIsNext(!xIsNext);
+
   }
 
   return (
