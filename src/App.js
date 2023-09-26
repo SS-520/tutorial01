@@ -40,12 +40,13 @@ export default function Board() {
   const [squares, setSquares] = useState(Array(9).fill(null));
 
   // Squareに引き渡す関数handleClick()を定義
-  function handleClick() {
+  // 引数のマス目iの中身=nextSquaresのi番目要素をXとして定義
+  function handleClick(i) {
     // 定数nextSquares に配列squaresをコピー
     const nextSquares = squares.slice();
 
     // 配列nextSquaresの最初の要素を"0"に設定
-    nextSquares[0] = "X";
+    nextSquares[i] = "X";
 
     // 定数squaresの中身をnextSquaresに更新
     setSquares(nextSquares);
@@ -55,26 +56,30 @@ export default function Board() {
     // JSXを返すので空の親要素<></>を設定
     // Squareに渡すvalueは配列内の値
     // SquareにonSquareClickとして関数handleClickを引き渡す
+    // handleClickの引数を定義する
+    // →onSquareClick={handleClick(0)}を渡すとローディング時から無限ループに陥る
+    // →handleClick()を呼び出すための関数をonSquareClickに渡す
+    // →冗長化を避けるためアロー関数で定義
     <>
       {/* 3行描写 */}
       <div className="board-row">
         {/* Squareコンポーネントを3マス分呼び出す */}
         {/* 表示する値は配列squareで対応する中身 */}
-        <Square value={squares[0]} onSquareClick={handleClick} />
-        <Square value={squares[1]} onSquareClick={handleClick} />
-        <Square value={squares[2]} onSquareClick={handleClick} />
+        <Square value={squares[0]} onSquareClick={ () => handleClick(0)} />
+        <Square value={squares[1]} onSquareClick={ () => handleClick(1)} />
+        <Square value={squares[2]} onSquareClick={ () => handleClick(2)} />
       </div>
       <div className="board-row">
         {/* Squareコンポーネントを3マス分呼び出す */}
-        <Square value={squares[3]} onSquareClick={handleClick} />
-        <Square value={squares[4]} onSquareClick={handleClick} />
-        <Square value={squares[5]} onSquareClick={handleClick} />
+        <Square value={squares[3]} onSquareClick={ () => handleClick(3)} />
+        <Square value={squares[4]} onSquareClick={ () => handleClick(4)} />
+        <Square value={squares[5]} onSquareClick={ () => handleClick(5)} />
       </div>
       <div className="board-row">
         {/* Squareコンポーネントを3マス分呼び出す */}
-        <Square value={squares[6]} onSquareClick={handleClick} />
-        <Square value={squares[7]} onSquareClick={handleClick} />
-        <Square value={squares[8]} onSquareClick={handleClick} />
+        <Square value={squares[6]} onSquareClick={ () => handleClick(6)} />
+        <Square value={squares[7]} onSquareClick={ () => handleClick(7)} />
+        <Square value={squares[8]} onSquareClick={ () => handleClick(8)} />
       </div>
     </>
   );
