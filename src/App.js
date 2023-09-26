@@ -1,7 +1,14 @@
 // 各マスの正方形を生成するコンポーネントを定義
 // props:value
-function Square( {value} ) {
-  return <button className="square">{ value }</button>;
+function Square({ value }) {
+  
+  // consoleに"clicked!"が表示されるようにする
+  function handleClick() {
+    console.log("clicked!");
+  }
+  
+  // マスをクリックしたらhandleClick()を呼び出す
+  return <button className="square" onClick={handleClick}>{ value }</button>;
 }
 
 // 外部から参照できるメイン関数"Square"を定義
