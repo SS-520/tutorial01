@@ -47,8 +47,8 @@ export default function Board() {
   function handleClick(i) {
 
     // クリックしたマスが空欄か選択済みか判定
-    // 選択済みなら処理終了
-    if (squares[i]) {
+    // 選択済み or 勝利判定が帰ってきたら処理終了
+    if (squares[i] || calculateWinner(squares)) {
       return;
     }
 
@@ -75,6 +75,18 @@ export default function Board() {
 
   }
 
+  // 中身を随時計算されるcalculateWinner()として固定変数winner規定
+  const winner = calculateWinner(squares);
+  // winnterの結果に応じて「次の手番」or「勝者」の状態を保持する変数status規定
+  let status;
+
+  if (winner) {
+    status = "Winner: " + winner;
+  } else {
+    status = "Next player: " + (xIsNext ? "×" : "○");
+  }
+
+
   return (
     // JSXを返すので空の親要素<></>を設定
     // Squareに渡すvalueは配列内の値
@@ -84,6 +96,8 @@ export default function Board() {
     // →handleClick()を呼び出すための関数をonSquareClickに渡す
     // →冗長化を避けるためアロー関数で定義
     <>
+      {/* 勝敗表示 */}
+      <div className="status">{status}</div>
       {/* 3行描写 */}
       <div className="board-row">
         {/* Squareコンポーネントを3マス分呼び出す */}
@@ -106,4 +120,26 @@ export default function Board() {
       </div>
     </>
   );
+}
+
+// 三目並びの勝敗定義のための関数を定義
+function calculateWinner(squares) {
+  const lines = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6]
+  ];
+
+  for (let i = 0; i < lines.length; i++) {
+    const [a, b, c] = lines[i];
+    if (squares[a] && (squares[a] === squares[b]) && (squares[a] === squares[c])) {
+      return squares[a];
+    }
+  }
+  return null;
 }
