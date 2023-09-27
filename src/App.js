@@ -133,7 +133,9 @@ function Board( {xIsNext, squares, onPlay} ) {
 export default function Game() {
 
   // 手番判定
-  const [xIsNext, setXIsNext] = useState(true);
+  // currentMove の値に基づいて判定
+  // 手番判定をこのコードに集約
+  const xIsNext = ( (currentMove % 2) === 0 );
 
   // ゲームの履歴
   // 盤面が9マスなので最高でも9手しかない→配列要素数9つ
@@ -163,7 +165,8 @@ export default function Game() {
     setCurrentMove(nextHistory.length - 1);
 
     // 手番更新
-    setXIsNext(!xIsNext);
+    // →Gameコンポーネントの序盤でcurrentMove に基づいて計算させるため削除
+    // setXIsNext(!xIsNext);
   }
 
   // 任意の操作に戻す
@@ -173,7 +176,8 @@ export default function Game() {
 
     // currentMoveが奇数→xIsNext: true
     // currentMoveが偶数→xIsNext: false
-    setXIsNext(nextMove % 2 === 0);
+    // →Gameコンポーネントの序盤でcurrentMove に基づいて計算させるため削除
+    // setXIsNext(nextMove % 2 === 0);
 
   }
 
