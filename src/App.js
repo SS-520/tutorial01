@@ -135,23 +135,65 @@ export default function Game() {
   // 手番判定
   const [xIsNext, setXIsNext] = useState(true);
 
-  // ゲームの保存
+  // ゲームの履歴
   // 盤面が9マスなので最高でも9手しかない→配列要素数9つ
   // 初期設定：配列内要素全てnull
-  const [history, setHistory] = useState( [Array(9).fill(null)] );
+  const [history, setHistory] = useState([Array(9).fill(null)]);
+
+  // 定数としてcurrentMove定義
+  // 初期値：0
+  const [currentMove, setCurrentMove] = useState(0);
 
   // 現在描画すべき最新の盤面状態を取得
-  const currentSquares = history[history.length - 1];
+  // → 現在選択中の手番の履歴を表示（手動変更がない限り最新を選択しているという扱い）
+  // const currentSquares = history[history.length - 1];
+  const currentSquares = history[currentMove];
 
   // ゲーム状況を任意の手番に更新
   function handlePlay(nextSquares) {
 
-    // 配列historyの中身をコピー + nextSquaresを要素として追加
-    setHistory([...history, nextSquares]);
+    // 過去の手番に戻った場合、指定手番の後の履歴はすべて削除する
+    // → 指定手番の部分までコピーした履歴配列 + 次の盤面で履歴を再セット
+    const nextHistory = [...history.slice(0, currentMove + 1), nextSquares];
+    // setHistory([...history, nextSquares]);
+    setHistory(nextHistory);
+
+    // 手番番号を更新
+    // 現在の配列数-1が手番の配列
+    setCurrentMove(nextHistory.length - 1);
 
     // 手番更新
     setXIsNext(!xIsNext);
   }
+
+  // 任意の操作に戻す
+  function jumpTo(nextMove) {
+    // currentMoveを更新する
+    setCurrentMove(nextMove);
+
+    // currentMoveが奇数→xIsNext: true
+    // currentMoveが偶数→xIsNext: false
+    setXIsNext(nextMove % 2 === 0);
+
+  }
+
+  // 配列historyの中身を配列squaresに以下の関数の中身に書き換えたものに変更し、結果を定数movesに格納する
+  // 引数：move
+  const moves = history.map((squares, move) => {
+
+    let description;
+    if (move > 0) {
+      description = 'Go to move #' + move;
+    } else {
+      description = 'Go to game start';
+    }
+
+    return (
+      <li key={move}>
+        <button onClick={ () => jumpTo(move) }>{description}</button>
+      </li>
+    );
+  });
 
   // 描画内容
   return (
@@ -162,8 +204,9 @@ export default function Game() {
         <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
       </div>
       {/* ゲームの履歴を毎ターン追加 */}
+      {/* 定数movesを表示する */}
       <div className="game-info">
-        <ol>{/*TODO*/}</ol>
+        <ol>{moves}</ol>
       </div>
     </div>
   );
