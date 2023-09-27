@@ -33,14 +33,17 @@ function Square( {value, onSquareClick } ) {
 
 // 外部から参照できるメイン関数"Square"を定義
 // "Square"ではなくなったので"Board"に変更
-export default function Board() {
+// 描画のメインコンポーネントを"Game"コンポーネントに変更
+// 呼び出し元Gameコンポーネントから「次の手番; 表示盤面; 手番指定」情報を受け取る
+function Board( {xIsNext, squares, onPlay} ) {
 
-  // 手番プレイヤーの判定
-  const [xIsNext, setXIsNext] = useState(true);
+  // 手番プレイヤーの判定→呼び出し元のGameコンポーネントで判定する
+  // const [xIsNext, setXIsNext] = useState(true);
 
   // 変数squaresを定義
   // 配列内の全てをnullで初期設定
-  const [squares, setSquares] = useState(Array(9).fill(null));
+  // 盤面初期設定はGameコンポーネントで行う
+  // const [squares, setSquares] = useState(Array(9).fill(null));
 
   // Squareに引き渡す、マスをクリックした時の動作関数handleClick()を定義
   // 引数のマス目iの中身=nextSquaresのi番目要素をXとして定義
@@ -66,12 +69,16 @@ export default function Board() {
     } else {
       nextSquares[i] = "○";
     }
-      
-    // 定数squaresの中身をnextSquaresに更新
-    setSquares(nextSquares);
 
+    
+    // 定数squaresの中身をnextSquaresに更新
+    // setSquares(nextSquares);
+    
     // 手番交代
-    setXIsNext(!xIsNext);
+    // setXIsNext(!xIsNext);
+
+    // setSquaresとsetXIsNextを統一した関数onPlayを呼び出す
+    onPlay(nextSquares)
 
   }
 
@@ -121,6 +128,47 @@ export default function Board() {
     </>
   );
 }
+
+// 描画のメインとして"Game"コンポーネントを作成
+export default function Game() {
+
+  // 手番判定
+  const [xIsNext, setXIsNext] = useState(true);
+
+  // ゲームの保存
+  // 盤面が9マスなので最高でも9手しかない→配列要素数9つ
+  // 初期設定：配列内要素全てnull
+  const [history, setHistory] = useState( [Array(9).fill(null)] );
+
+  // 現在描画すべき最新の盤面状態を取得
+  const currentSquares = history[history.length - 1];
+
+  // ゲーム状況を任意の手番に更新
+  function handlePlay(nextSquares) {
+
+    // 配列historyの中身をコピー + nextSquaresを要素として追加
+    setHistory([...history, nextSquares]);
+
+    // 手番更新
+    setXIsNext(!xIsNext);
+  }
+
+  // 描画内容
+  return (
+    <div className="game">
+        {/* ゲーム盤面描画するBoardコンポーネントを呼び出す */}
+        {/* props: 次の手番; 表示盤面; 手番指定 */}
+      <div className="game-board">
+        <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
+      </div>
+      {/* ゲームの履歴を毎ターン追加 */}
+      <div className="game-info">
+        <ol>{/*TODO*/}</ol>
+      </div>
+    </div>
+  );
+}
+
 
 // 三目並びの勝敗定義のための関数を定義
 function calculateWinner(squares) {
